@@ -1,6 +1,5 @@
-// import {access, readFile, writeFile} from 'fs/promises'
-
-const {access, readFile, writeFile} = require('fs/promises')
+import {access, readFile, writeFile} from 'fs/promises'
+import Product from './Product.js'
 
 class ProductManager {
     path
@@ -32,17 +31,22 @@ class ProductManager {
         }
     }
 
-    async getProducts() {
-        console.log(JSON.parse(await readFile(this.path, 'utf-8')))
+    async getProducts(limits) {
+        const products = JSON.parse(await readFile(this.path, 'utf-8'))
+        if (limits === 0) {
+            return products
+        }
+
+        return products.slice(0,limits)
     }
 
     async getProductById(id) {
         const products = JSON.parse(await readFile(this.path, 'utf-8'))
         const item = products.find(product => product.id === id)
         if (item) {
-            console.log(item)
+            return item
         } else {
-            console.log("not found")
+            return "not found"
         }
     }
 
@@ -83,58 +87,60 @@ class ProductManager {
     }
 }
 
-class Product {
-    id
-    title
-    description
-    price
-    thumbnail
-    code
-    stock
+export default ProductManager
 
-    constructor(id, title, description, price, thumbnail, code, stock) {
-        this.id = id
-        this.title = title
-        this.description = description
-        this.price = price
-        this.thumbnail = thumbnail
-        this.code = code
-        this.stock = stock
-    }
-}
+// class Product {
+//     id
+//     title
+//     description
+//     price
+//     thumbnail
+//     code
+//     stock
 
-const main = async () => {
-    controladorDeProductos = new ProductManager('./productosInformatica.json')
-    await controladorDeProductos.checkFile()
-    console.log("Se muestra estado inicial")
-    await controladorDeProductos.getProducts()
-    console.log("Comienza carga de productos...")
-    await controladorDeProductos.addProduct('Mouse','Mouse de 4000 dpi ideal gamer',25000,'./img/mouse.jpg',0120230130,10)
-    await controladorDeProductos.addProduct('Teclado','Teclado inalambrico iluminacion RGB',20000,'./img/teclado.jpg',0220230130,5)
-    await controladorDeProductos.addProduct('Gabinete','Gabinete lateral transparente con Cooler',15000,'./img/gabinete.jpg',0320230130,20)
-    await controladorDeProductos.addProduct('Monitor','Monitor led 22pulgadas IPS',55000,'./img/monitor.jpg',0420230130,5)
-    await controladorDeProductos.addProduct('WebCam','Camara web de 1080fpm',8000,'./img/webcam.jpg',0520230130,4)
-    await controladorDeProductos.addProduct('Wifi','Placa wifi USB',10000,'./img/wifi.jpg',0620230130,5)
-    console.log("")
-    console.log("Se intenta agregar un producto que con el code existente")
-    await controladorDeProductos.addProduct('WebCam','Camara web de 1080fpm',8000,'./img/webcam.jpg',0520230130,4)
-    console.log("")
-    console.log("Se muestran todos los productos")
-    await controladorDeProductos.getProducts()
-    console.log("")
-    console.log("Se muestra producto por id")
-    await controladorDeProductos.getProductById(5)
-    console.log("")
-    console.log("Se muestra error al buscar id no existente")
-    await controladorDeProductos.getProductById(100)
-    console.log("Se actualiza un producto")
-    await controladorDeProductos.updateProduct(5,'Camara Web','Camara web de 1080 fps',7000,'./img/webcam.jpg', 0620230131,8)
-    console.log("")
-    console.log("Se elimina un producto")
-    await controladorDeProductos.removeProduct(3)
-    console.log("")
-    console.log("Se muestra nuevamente le listado para observar como quedo")
-    await controladorDeProductos.getProducts()
-}
+//     constructor(id, title, description, price, thumbnail, code, stock) {
+//         this.id = id
+//         this.title = title
+//         this.description = description
+//         this.price = price
+//         this.thumbnail = thumbnail
+//         this.code = code
+//         this.stock = stock
+//     }
+// }
 
-main()
+// const main = async () => {
+//     controladorDeProductos = new ProductManager('./productosInformatica.json')
+//     await controladorDeProductos.checkFile()
+//     console.log("Se muestra estado inicial")
+//     await controladorDeProductos.getProducts()
+//     console.log("Comienza carga de productos...")
+//     await controladorDeProductos.addProduct('Mouse','Mouse de 4000 dpi ideal gamer',25000,'./img/mouse.jpg',0120230130,10)
+//     await controladorDeProductos.addProduct('Teclado','Teclado inalambrico iluminacion RGB',20000,'./img/teclado.jpg',0220230130,5)
+//     await controladorDeProductos.addProduct('Gabinete','Gabinete lateral transparente con Cooler',15000,'./img/gabinete.jpg',0320230130,20)
+//     await controladorDeProductos.addProduct('Monitor','Monitor led 22pulgadas IPS',55000,'./img/monitor.jpg',0420230130,5)
+//     await controladorDeProductos.addProduct('WebCam','Camara web de 1080fpm',8000,'./img/webcam.jpg',0520230130,4)
+//     await controladorDeProductos.addProduct('Wifi','Placa wifi USB',10000,'./img/wifi.jpg',0620230130,5)
+//     console.log("")
+//     console.log("Se intenta agregar un producto que con el code existente")
+//     await controladorDeProductos.addProduct('WebCam','Camara web de 1080fpm',8000,'./img/webcam.jpg',0520230130,4)
+//     console.log("")
+//     console.log("Se muestran todos los productos")
+//     await controladorDeProductos.getProducts()
+//     console.log("")
+//     console.log("Se muestra producto por id")
+//     await controladorDeProductos.getProductById(5)
+//     console.log("")
+//     console.log("Se muestra error al buscar id no existente")
+//     await controladorDeProductos.getProductById(100)
+//     console.log("Se actualiza un producto")
+//     await controladorDeProductos.updateProduct(5,'Camara Web','Camara web de 1080 fps',7000,'./img/webcam.jpg', 0620230131,8)
+//     console.log("")
+//     console.log("Se elimina un producto")
+//     await controladorDeProductos.removeProduct(3)
+//     console.log("")
+//     console.log("Se muestra nuevamente le listado para observar como quedo")
+//     await controladorDeProductos.getProducts()
+// }
+
+//main()
